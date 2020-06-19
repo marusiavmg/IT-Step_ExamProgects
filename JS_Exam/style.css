@@ -1,0 +1,105 @@
+.form{
+    width: 500px;
+    background: rgb(240 255 240/60%);
+    border: solid black 1px;
+    margin: 10px auto;    
+    padding: 30px 50px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
+}
+.button{
+    width: 100px;
+    font-size: 16px; 
+    padding: 5px;   
+    margin: 10px;
+    margin-bottom: 10px;
+}
+.input{
+    width: 230px;
+    height: 25px;
+    margin: 15px;
+    font-size: 18px;
+}
+.card{
+    width: 500px;
+    border : solid grey 3px;
+    text-align: center;   
+}
+.product-container{
+    width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+}
+.text{
+   font-size: 25px;
+   padding: 8px;
+   margin: 3px;     
+}
+.underline{
+    text-decoration: underline;  
+}
+.img{
+    margin: 5px; 
+    text-align: center;
+}
+.message{
+  color: red;
+}
+.border-grey{
+   border : solid grey 3px;
+}
+.border-green{
+    border : solid greenyellow 3px;
+}
+.border-gold{
+    border : solid gold 3px;
+ }
+.red{
+    font-size: 10px;
+    color:red
+}
+.border-red{
+    border : solid red 2px;
+}
+.hidden{
+    display: none
+}
+.button-description{
+    width: 200px;
+    font-size: 16px; 
+    padding: 7px;   
+    margin: 10px;
+    margin-bottom: 10px;
+}
+.title{
+    margin:  15px 0 ;
+}
+.form__title{
+    font-size: 30px;
+    font-weight: bolder;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+.size{
+    width: 300px;
+}
+.pop-up {
+    width: 500px;
+    height: 380px;
+    background-color: rgb(240 255 240);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border: solid grey 3px;
+    border-radius: 2px;
+    /* positioning of pop-up editing form */
+    position: absolute;
+    right: 200px;
+}
+    /* positioning pop-up editing form */
+.pop-up-positioning {
+    position: relative;
+}
+.hyphenation{
+    word-wrap: break-word;
+}

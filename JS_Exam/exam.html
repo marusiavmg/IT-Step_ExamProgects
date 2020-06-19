@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Exam</title>
+    <link rel='stylesheet' href='./style.css' />
+  </head>
+  <body>
+    <script>
+      'use strict';
+
+      const appendElement = (position, tag, id) => {
+
+        const elem = document.createElement(tag);
+        elem.id = id;
+        position.append(elem);
+      };
+
+      const appendInput = (form, type, id, label) => {        
+
+        const inputContainer = document.createElement('div');
+        const input = document.createElement('input');
+        input.setAttribute('type', type);
+        input.id = id;
+
+        if (label) {
+          const labelForInput = document.createElement('label');
+          labelForInput.setAttribute = ('for', id);
+          labelForInput.innerText = label;
+          inputContainer.append(labelForInput);
+        }
+
+        inputContainer.append(input);
+        form.append(inputContainer);
+      };
+
+      const clearForm = (form) => {
+        for (let input of form.elements) {
+          if (input.type == 'submit') continue;
+
+          if (input.type == 'checkbox' || input.type == 'radio') {
+            input.checked = false;
+            continue;
+          }
+          input.value = '';
+        }
+      };
+
+      let isPopupShowed = false; 
+
+      //constructing of general page structure
+      appendElement(document.body, 'div', 'globalContainer');
+      appendElement(globalContainer, 'form', 'mainForm');
+      mainForm.classList.add('form');
+      appendElement(globalContainer, 'form', 'searchForm');
+      searchForm.classList.add('form');
+      appendElement(globalContainer, 'div', 'productContainer');
+      productContainer.classList.add('product-container');
+
+      // constructing inputs and elements for mainForm
+      //mainInformation container
+      appendElement(mainForm, 'div', 'mainFormTitle');
+      mainFormTitle.innerText = 'Product registration form'
+      mainFormTitle.classList.add('form__title', 'underline')
+      appendElement(mainForm, 'div', 'mainInformation');
+      appendInput(mainInformation, 'text', 'nameProduct', 'Name');
+      nameProduct.required = 'true';
+      nameProduct.classList.add('input');
+      appendElement(mainInformation, 'div', 'nameValid');
+      nameValid.classList.add('red');
+
+      appendInput(mainInformation, 'text', 'articleProduct', 'Article');
+      articleProduct.required = 'true';
+      articleProduct.classList.add('input');
+      appendElement(mainInformation, 'div', 'articleValid');
+      articleValid.classList.add('red');
+
+      appendInput(mainInformation, 'number', 'countProduct', 'Count');
+      countProduct.setAttribute('min', '1');
+      countProduct.required = 'true';
+      countProduct.classList.add('input');
+
+      appendInput(mainInformation, 'text', 'priceProduct', 'Price');
+      priceProduct.required = 'true';
+      priceProduct.classList.add('input');
+      appendElement(mainInformation, 'div', 'priceValid'); 
+      priceValid.classList.add('red');
+
+      appendInput(mainInformation, 'date', 'creationDateProduct', 'Creation date');
+      creationDateProduct.required = 'true';
+      creationDateProduct.classList.add('input');
+
+      //Price segment container
+      appendElement(mainForm, 'div', 'priceSegmentContainer');     
+      appendElement(priceSegmentContainer, 'div', 'radioTitle');
+      radioTitle.classList.add('title')
+      radioTitle.innerText = 'Price segment';
+      radioTitle.classList.add('underline')
+      appendInput(priceSegmentContainer, 'radio', 'priceSegmentCheap', 'Cheap');
+      priceSegmentCheap.setAttribute('name', 'priceSegment');
+      priceSegmentCheap.setAttribute('required', 'true');
+      priceSegmentCheap.setAttribute('value', 'Cheap');
+
+      appendInput(priceSegmentContainer, 'radio', 'priceSegmentOptimal', 'Optimal');
+      priceSegmentOptimal.setAttribute('name', 'priceSegment');
+      priceSegmentOptimal.setAttribute('value', 'Optimal');
+
+      appendInput(priceSegmentContainer, 'radio', 'priceSegmentPremium', 'Premium');
+      priceSegmentPremium.setAttribute('name', 'priceSegment');
+      priceSegmentPremium.setAttribute('value', 'Premium');
+
+      //secondary information container
+      appendElement(mainForm, 'div', 'secondaryInform');
+      appendInput(secondaryInform, 'text', 'imageProduct', 'Product image link');
+      imageProduct.classList.add('input');
+
+      appendElement(secondaryInform, 'div', 'textareaTitle');
+      textareaTitle.innerText = 'Description';
+      textareaTitle.classList.add('text');
+
+      appendElement(secondaryInform, 'textarea', 'descriptionProduct');
+      descriptionProduct.setAttribute('cols', '45');
+      descriptionProduct.setAttribute('rows', '5');
+
+      appendInput(mainForm, 'submit', 'submitForm');
+      submitForm.classList.add('button');
+
+      // constructing inputs and elements for searchForm
+      //searchContainer
+      appendElement(searchForm, 'div', 'searchContainer');
+      appendInput(searchContainer, 'text', 'searchInput', 'Search');
+      searchInput.classList.add('input');
+      appendElement(searchContainer.children[0], 'span', 'OkGoogle');
+      OkGoogle.innerText = 'Ok, Google';
+
+      //filterContainer
+      appendElement(searchForm, 'div', 'filterContainer');
+      appendElement(filterContainer, 'div', 'titleFilterContainer');
+      titleFilterContainer.innerHTML = 'Filter by prise segment';
+      titleFilterContainer.classList.add('underline', 'title')
+
+      appendElement(filterContainer, 'div', 'checkboxContainer');
+      appendInput(checkboxContainer, 'checkbox', 'filterCheap', 'Cheap');
+      filterCheap.setAttribute('checked', 'true');
+      appendInput(checkboxContainer, 'checkbox', 'filterOptimal', 'Optimal');
+      filterOptimal.setAttribute('checked', 'true');
+      appendInput(checkboxContainer, 'checkbox', 'filterPremium', 'Premium');
+      filterPremium.setAttribute('checked', 'true');
+
+      //sortContainer
+      appendElement(searchForm, 'div', 'sortContainer');
+      appendElement(sortContainer, 'div', 'titleSortContainer');
+
+      titleSortContainer.innerText = 'Sort by';
+      titleSortContainer.classList.add('underline', 'title')
+      appendInput(sortContainer, 'radio', 'sortAlphabet', 'Alphabet');
+      sortAlphabet.setAttribute('name', 'sortSegment');
+      sortAlphabet.setAttribute('value', 'sortAlphabet');
+      sortAlphabet.setAttribute('checked', 'true');
+
+      appendInput(sortContainer, 'radio', 'sortPrice', 'Price');
+      sortPrice.setAttribute('name', 'sortSegment');
+      sortPrice.setAttribute('value', 'sortPrice');
+
+      appendInput(sortContainer, 'radio', 'sortCount', 'Count');
+      sortCount.setAttribute('name', 'sortSegment');
+      sortCount.setAttribute('value', 'sortCount');
+
+      appendInput(sortContainer, 'radio', 'sortDate', 'Date');
+      sortDate.setAttribute('name', 'sortSegment');
+      sortDate.setAttribute('value', 'sortDate');
+
+      const model = [
+        {
+          articleProduct: 'ds1235',
+          countProduct: '1',
+          creationDateProduct: '2020-04-20',
+          imageProduct:
+            'https://img.5element.by/import/images/ut/goods/good_0b2c1508-ffa0-11e9-80c7-005056840c70/good_img_a6d82613-006c-11ea-80c7-005056840c70_600.jpg',
+          nameProduct: 'Macbook',
+          priceProduct: '2000',
+          descriptionProduct:
+            'Very good Very good Very good Very good Very good Very good Very good Very good',
+          priceSegment: 'Premium',        
+          },
+        {
+          articleProduct: 'BF243',
+          countProduct: '3',
+          creationDateProduct: '2020-05-09',
+          nameProduct: 'CD-player',
+          priceProduct: '500',
+          priceSegment: 'Optimal',        
+          },
+        {
+          articleProduct: 'M55F35',
+          countProduct: '1',
+          creationDateProduct: '2020-02-08',
+          imageProduct:
+            'https://avatars.mds.yandex.net/get-mpic/175985/img_id3041853602201130185.jpeg/9hq',
+          nameProduct: 'Camera',
+          priceProduct: '800',
+          descriptionProduct:
+            'Фотоаппарат Fujifilm Instax Square SQ6 (красный)камера для мгновенной печати F12.6 65.75 мм',
+          priceSegment: 'Cheap',        
+          },
+        {
+          articleProduct: 'M1235',
+          countProduct: '15',
+          creationDateProduct: '2020-03-16',
+          imageProduct:
+            'https://img.moyo.ua/img/products/4535/15_600.jpg',
+          nameProduct: 'Notebook',
+          priceProduct: '1000',
+          descriptionProduct: 
+            'ASUS Laptop X543 выполнен в прочном, но легком корпусе весом всего 1,9 кг, поэтому он не будет обременять своего владельца в дороге, а привлекательный дизайн и красивая отделка превращают его в современный, стильный аксессуар.',
+          priceSegment: 'Premium',         
+          },
+        {
+          articleProduct: 'F555',
+          countProduct: '6',
+          creationDateProduct: '2020-06-19',
+          imageProduct: 'https://images.ru.prom.st/693172032_w640_h640_portativnyj-dvd-pleer-xpx.jpg',
+          nameProduct: 'DVD-player',
+          priceProduct: '600',
+          descriptionProduct: 
+            'Портативный DVD-плеер XPX EA-1669D c экpaнoм 16 дюймoв и цифpoвым тюнepoм DVВ-Т2 - ХРХ ЕА-1669D. Имeeт пoвopoтный экpaн c яpким и кaчecтвeнным изoбpaжeниeм, пoддepжкy СD-DVD диcкoв, флeшeк и кapт пaмяти, вcтpoeнный FМ-тюнep и пoддepжкy 8-битныx дeнди-игp. ',
+          priceSegment: 'Optimal',        
+          },
+        {
+          articleProduct: 'G999',
+          countProduct: '13',
+          creationDateProduct: '2020-01-08',
+          imageProduct:
+            'https://images.ru.prom.st/405057671_w200_h200_vstraivaemyj-morozilnik-teka.jpg',
+          nameProduct: 'Refrigerator',
+          priceProduct: '1300',
+          descriptionProduct:
+            'Морозильная камера под столешницу имеет 3 прозрачных выдвижных ящика с общей ёмкостью 87л. Может устанавливаться дополнительно к холодильнику, если не достаточно места для замораживаемых продуктов. В комплектации- формочка для льда. Прекрасное решение для заморозки фруктов, мяса, рыбы',
+          priceSegment: 'Cheap',               
+        },
+      ];
+
+      let itemId = 0;
+
+      //создаем функцию обработки mainForm
+
+      let formData = {}; 
+
+      for (let input of mainForm.elements) {
+        if (input.type === 'submit') continue;
+
+        if (input.type === 'radio') {          
+
+          input.addEventListener('change', (event) => {
+            if (priceSegmentCheap.checked)
+              formData[input.name] = event.target.value;
+            if (priceSegmentOptimal.checked)
+              formData[input.name] = event.target.value;
+            if (priceSegmentPremium.checked)
+              formData[input.name] = event.target.value;
+          });
+          continue;
+        };
+
+        if (input.type === 'date') {
+          
+            input.addEventListener('change', (event) => {
+            formData[input.id] = event.target.value;
+          });
+        };
+
+        input.addEventListener('change', (event) => {
+         
+          formData[input.id] = event.target.value;
+        });
+      };
+      
+      mainForm.addEventListener('submit', (event) => {        
+        event.preventDefault();           
+        model.push(formData);
+        formData = {}; 
+        setView(); 
+        clearForm(mainForm);         
+      });
+
+      // функция для отображения данных на странице
+
+      const setView = (array = model) => {
+        productContainer.innerHTML = ''; 
+
+        array.forEach((item) => {
+          
+          item.itemId = itemId++
+        //constructing cards
+          const cardContainer = document.createElement('div', 'card', 'pop-up-positioning'); 
+          cardContainer.classList.add('card', 'text');         
+          productContainer.append(cardContainer); 
+          const name = document.createElement('div'); 
+          name.classList.add('text');
+          cardContainer.append(name); 
+
+          const price = document.createElement('div'); 
+          price.classList.add('text');
+          cardContainer.append(price);
+          
+          const count = document.createElement('div'); 
+          count.classList.add('text');
+          cardContainer.append(count); 
+
+          const article = document.createElement('div'); 
+          article.classList.add('text');
+          cardContainer.append(article); 
+
+          const date = document.createElement('div'); 
+          date.classList.add('text');
+          cardContainer.append(date); 
+
+          const buttonDescription = document.createElement('button');
+          buttonDescription.innerText = 'Description';
+          buttonDescription.classList.add('button-description')
+          cardContainer.append(buttonDescription);
+          buttonDescription.onclick = function() {
+            description.classList.toggle('hidden')
+          };
+
+          const description = document.createElement('div'); 
+          description.classList.add('text', 'hidden', 'hyphenation');
+          cardContainer.append(description); 
+
+          const picture = document.createElement('div');
+          picture.classList.add('img');
+          picture.innerHTML = `<img src = 'https://avatars.mds.yandex.net/get-pdb/1895114/f5ef2db2-2dea-48f7-bcec-c7593611dff8/s600' height = 150px widht = 200px>`;
+          cardContainer.prepend(picture);
+
+          const message = document.createElement('div');
+          message.classList.add('message', 'text');
+          cardContainer.append(message);
+
+          for (let prop in item) {
+             
+            name.innerHTML = `${item.nameProduct}`;
+            price.innerHTML = `Price : ${item.priceProduct}  $`;
+            count.innerHTML = `Count : ${item.countProduct}`;
+            article.innerHTML = `Article: ${item.articleProduct}`;
+            date.innerHTML = `Date : ${item.creationDateProduct}`;
+
+            if (prop === 'descriptionProduct') {
+              description.innerHTML = `${item.descriptionProduct}`;
+            };
+
+            if (item.countProduct === '1') {
+              message.innerText = `LAST ONE!`;
+            };
+
+            if (item.priceSegment === 'Cheap') {
+              cardContainer.classList.add('border-grey');
+            };
+
+            if (item.priceSegment === 'Optimal') {
+              cardContainer.classList.add('border-green');
+            };
+
+            if (item.priceSegment === 'Premium') {
+              cardContainer.classList.add('border-gold');
+            };
+
+            if (prop === 'imageProduct') {
+              let image = item.imageProduct;
+              picture.innerHTML = `<image src = ${image} height = 150px width = 200px>`;
+            };
+          };
+
+          const editButton = document.createElement('input');
+          editButton.type = 'button';
+          editButton.value = 'EDIT';
+          editButton.classList.add('button');
+          cardContainer.append(editButton);
+          
+          editButton.addEventListener('click', (event) => {
+            
+            if (isPopupShowed === false) {
+
+              renderPopup(cardContainer, item.itemId);
+            };
+          });
+        });        
+      };
+
+      setView();
+
+      // режим редактирования
+
+      const renderPopup = (element, id) => {
+
+        isPopupShowed = true; 
+
+        //constructing popup Container
+
+        const popup = document.createElement('div', 'popupForm'); 
+        popup.classList.add('card', 'text', 'pop-up');
+        element.prepend(popup);
+
+        appendInput(popup, 'text', 'changeLink', 'Image link');
+        changeLink.classList.add('input');
+        appendInput(popup, 'text', 'changeName', 'Name');
+        changeName.classList.add('input');
+        appendElement(popup, 'div', 'changeNameValid'); 
+        changeNameValid.classList.add('red');
+        appendInput(popup, 'text', 'changePrice', 'Price');
+        changePrice.classList.add('input');
+        appendElement(popup, 'div', 'changePriceValid'); 
+        changePriceValid.classList.add('red');
+        appendInput(popup, 'number', 'changeCount', 'Count');
+        changeCount.min = '1';
+        changeCount.classList.add('input');
+        appendElement(popup, 'div', 'changeCountValid'); 
+        changeCountValid.classList.add('red');
+        appendInput(popup, 'text', 'changeArticle', 'Article');
+        changeArticle.classList.add('input');
+        appendElement(popup, 'div', 'changeArticleValid'); 
+        changeArticleValid.classList.add('red');
+
+        const saveButton = document.createElement('input');
+        saveButton.id = 'saveButton';
+        saveButton.setAttribute('type', 'button');
+        popup.append(saveButton);
+        saveButton.classList.add('button');
+        saveButton.value = 'Save';
+
+        const buttonDelete = document.createElement('button');
+        popup.append(buttonDelete);
+        buttonDelete.classList.add('button');
+        buttonDelete.innerText = 'Delete';
+
+        const elementFromModel = model.find((item) => item.itemId == id); 
+       
+        // присваиваем инпутам popup значения из карточки
+
+        if (!elementFromModel.imageProduct) {
+         
+          changeLink.value = '';
+        } else {            
+          changeLink.value = elementFromModel.imageProduct;
+        }
+
+        changeName.value = elementFromModel.nameProduct;
+        changePrice.value = elementFromModel.priceProduct;
+        changeCount.value = elementFromModel.countProduct;
+        changeArticle.value = elementFromModel.articleProduct;
+
+        const elementFromModelIndex = model.findIndex(
+            (item) => item.itemId == id
+        ); 
+
+        //validation popup
+
+        changeName.addEventListener('input', (event) => {
+          if (event.target.value.length < 5) {
+            saveButton.setAttribute('disabled', 'true'); 
+            changeNameValid.innerText = 'Name must contains 5 simbols';
+            changeName.classList.add('border-red');
+          } else {
+            changeNameValid.innerText = '';
+            changeName.classList.remove('border-red');
+            saveButton.removeAttribute('disabled'); 
+          };
+        });
+
+        changeArticle.addEventListener('input', (event) => {
+          let checkedArray = event.target.value.split('');
+
+          if (
+            checkedArray[0] > 'Z' ||
+            isNaN(checkedArray[1]) ||
+            isNaN(checkedArray[2])
+          ) {
+            saveButton.setAttribute('disabled', 'true');
+            changeArticleValid.innerText =
+              'Article must begin with a capital letter and then includes 2 number';
+            changeArticle.classList.add('border-red');
+          } else {
+            changeArticleValid.innerText = '';
+            changeArticle.classList.remove('border-red');
+            saveButton.removeAttribute('disabled');
+          };
+        });
+
+        changePrice.addEventListener('input', (event) => {
+          let checkedChangeDataArray = event.target.value.split('');
+
+          for (let i = 0; i < checkedChangeDataArray.length; i++) {
+            if (isNaN(checkedChangeDataArray[i])) {
+              saveButton.setAttribute('disabled', 'true');
+              changePriceValid.innerText = 'Enter only a number';
+              changePrice.classList.add('border-red');
+            } else {
+              changePriceValid.innerText = '';
+              changePrice.classList.remove('border-red');
+              saveButton.removeAttribute('disabled');
+            };
+          };
+        });
+
+        changeCount.addEventListener('input', (event) => {
+          if ((event.target.value) % 1 != 0) {
+            saveButton.setAttribute('disabled', 'true'); 
+            changeCountValid.innerText = 'The count must be an even number';
+            changeCount.classList.add('border-red');
+          } else {
+            changeCountValid.innerText = '';
+            changeCount.classList.remove('border-red');
+            saveButton.removeAttribute('disabled'); 
+          };
+        });
+
+        saveButton.addEventListener('click', (event) => {
+            
+          model[elementFromModelIndex] = {
+            ...model[elementFromModelIndex],
+
+            imageProduct: changeLink.value ? changeLink.value : 'https://avatars.mds.yandex.net/get-pdb/1895114/f5ef2db2-2dea-48f7-bcec-c7593611dff8/s600',
+            nameProduct: changeName.value,
+            priceProduct: changePrice.value,
+            countProduct: changeCount.value,
+            articleProduct: changeArticle.value,
+            creationDateProduct: new Date().toLocaleDateString('en-GB'),
+          };
+
+          popup.classList.add('hidden');
+          setView();
+          isPopupShowed = false; 
+        });
+
+        buttonDelete.addEventListener('click', (event) => {
+         
+          popup.classList.add('hidden');
+          model.splice(model[elementFromModelIndex], 1);
+          setView();
+          isPopupShowed = false;
+        });
+      };
+
+      // Обработка  searchForm  
+
+      searchInput.addEventListener('input', (event) => {
+               
+        const filteredListArray = model.filter((item) => {
+
+          return item.nameProduct.toLowerCase().startsWith(event.target.value.toLowerCase());
+        }); 
+
+        setView(filteredListArray); 
+      });
+
+      const checkboxesCollection = checkboxContainer.querySelectorAll('input'); 
+      const radioListCollection = sortContainer.querySelectorAll('input');
+
+      const getCurrentCheckboxesValue = (form) => {
+        
+        const checkboxesValues = {};
+
+        for (let item of checkboxesCollection) {
+          checkboxesValues[item.id] = item.checked; 
+        }
+           return checkboxesValues;
+      };
+
+      for (let input of searchForm.elements) {
+        
+        if (input.type === 'text') continue; 
+        let sortCardsProduct;
+        if (sortAlphabet.checked) {
+          sortCardsProduct = model.sort((a, b) => {
+            return a.nameProduct < b.nameProduct ? -1 : 1;
+          });
+
+          setView(sortCardsProduct);
+        };        
+      
+        if (filterCheap.checked && filterOptimal.checked && filterPremium.checked) {
+          setView();
+        };
+
+        input.addEventListener('change', (event) => {
+          
+          if (sortAlphabet.checked) {
+            sortCardsProduct = model.sort((a, b) => {
+              return a.nameProduct < b.nameProduct ? -1 : 1;
+            });
+
+            setView(sortCardsProduct);
+          };
+
+          if (sortCount.checked) {
+            sortCardsProduct = model.sort((a, b) => {
+              return b.countProduct - a.countProduct;
+            });
+
+            setView(sortCardsProduct);
+          };
+
+          if (sortPrice.checked) {
+            sortCardsProduct = model.sort((a, b) => {
+              return b.priceProduct - a.priceProduct;
+            });
+
+            setView(sortCardsProduct);
+          };
+
+          if (sortDate.checked) {
+            sortCardsProduct = model.sort((a, b) => {
+              a = new Date(a.creationDateProduct); 
+              b = new Date(b.creationDateProduct);
+              if (a < b) return -1;
+            });
+
+            setView(sortCardsProduct);
+          };
+
+          const currentCheckboxesValue = getCurrentCheckboxesValue(searchForm);
+
+          if (!currentCheckboxesValue.filterCheap && !currentCheckboxesValue.filterOptimal && !currentCheckboxesValue.filterPremium) {
+            productContainer.classList.toggle('hidden');
+            
+          } else {
+            let filterCards = model.filter((item) => {
+              return ((currentCheckboxesValue.filterCheap ? item.priceSegment == 'Cheap' : false) ||
+                (currentCheckboxesValue.filterOptimal ? item.priceSegment == 'Optimal' : false) ||
+                (currentCheckboxesValue.filterPremium ? item.priceSegment == 'Premium' : false));
+            });
+            productContainer.classList.remove('hidden');
+            setView(filterCards);
+          };
+        });
+      };
+
+      // Validation mainForm
+
+     
+      nameProduct.addEventListener('input', (event) => {
+        if (event.target.value.length < 5) {
+          nameValid.innerText = 'Name must contains 5 simbols';
+          nameProduct.classList.add('border-red');
+          } else {
+          nameValid.innerText = '';
+          nameProduct.classList.remove('border-red');
+          };
+      });
+
+      articleProduct.addEventListener('input', (event) => {
+        let checkedArray = event.target.value.split('');
+
+        if ( checkedArray[0] > 'Z' || isNaN(checkedArray[1]) || isNaN(checkedArray[2])) {
+          articleValid.innerText = 'Article must begin with a capital letter and then includes 2 number';
+          articleProduct.classList.add('border-red');
+        } else {
+          articleValid.innerText = '';
+          articleProduct.classList.remove('border-red');
+        };
+      });
+
+      priceProduct.addEventListener('input', (event) => {
+        let checkedDataArray = event.target.value.split('');
+
+        for (let i = 0; i < checkedDataArray.length; i++) {
+          if (isNaN(checkedDataArray[i])) {
+            priceValid.innerText = 'Enter only a number';
+            priceProduct.classList.add('border-red');
+          } else {
+            priceValid.innerText = '';
+            priceProduct.classList.remove('border-red');
+          };
+        };
+      });
+    
+    </script>
+  </body>
+</html>
